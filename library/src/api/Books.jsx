@@ -1,9 +1,21 @@
 // src/api/books.js
 import axiosInstance from './AxiosInstance';
 
+// 모든 책 가져오기
+export const getAllBooks = async (page) =>  {
+  const response = await axiosInstance.get(`/book/all/${page}`);
+  return response.data;
+}
+
+// BookId로 책 Detail조회
+export const getBookById = async (bookId) => {
+  const response = await axiosInstance.get(`/book/${bookId}`);
+  return response.data;
+}
+
 // 도서 검색
 export const searchBooks = async (queryParams) => {
-  const response = await axiosInstance.get('/books', { params: queryParams });
+  const response = await axiosInstance.get(`/book/${queryParams}`);
   return response.data;
 };
 

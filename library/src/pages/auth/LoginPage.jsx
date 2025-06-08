@@ -20,16 +20,21 @@ export default function LoginPage({ checkAuth }) {
       await login({ username, password });
       console.log('로그인 성공');
 
-      // 로그인 후 인증 상태 업데이트
-      await checkAuth();
-      console.log(auth);
+      // 로그인 후 인증 상태 업데이트(아래쪽 확실한 라우팅을 위한 반환값 받기)
+      const authUser = await checkAuth();
 
-      // 인증 상태와 역할 기반 라우팅
-      if (auth.role === 'ADMIN') {
-        console.log("Auth in admin", auth);
+      // 인증 상태와 역할 기반 라우팅(무조건 업데이트 된 User여야함!! 중요)
+      if (authUser.role === 'ADMIN') {
+        console.log("Auth in admin", authUser);
+      } else {
+        console.log("Auth in User", authUser);
+      }
+
+      if(authUser.role === 'ADMIN') {
+        console.log('Goto Admin Page');
         navigate('/admin');
       } else {
-        console.log("Auth in User", auth);
+        console.log('Goto User Page');
         navigate('/user');
       }
     } catch (err) {

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/auth/LoginPage';
 import UserHome from '../pages/user/UserHome';
 import AdminHome from '../pages/admin/UserManagePage';
+import BookDetail from '../pages/book/BookDetail';
 import BookManagePage from '../pages/admin/BookManagePage';
 import BorrowHistoryPage from '../pages/admin/BorrowHistoryPage';
 import Layout from '../components/Layout';
@@ -26,6 +27,7 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage checkAuth={checkAuth} />} />
+        <Route path="/book/:id" element={<BookDetail />} />
 
         {/* USER 권한 */}
         <Route

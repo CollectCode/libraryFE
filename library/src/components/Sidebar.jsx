@@ -6,7 +6,7 @@ export default function Sidebar() {
   const { auth, checkAuth } = useAuth();
 
   return (
-    <aside className="w-full bg-gray-800 text-white h-full">
+    <aside className="w-[200px] bg-gray-800 text-white h-[910px]">
       <nav className="flex flex-col p-4 space-y-2">
         {auth.role === 'USER' && (
           <Link to="/user" className="hover:bg-gray-700 p-2 rounded">

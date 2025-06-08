@@ -10,6 +10,7 @@ export const login = async (data) => {
 export const logout = async () => {
   // JWT는 쿠키에 저장되므로 별도 token 저장 없음
   const response = await axiosInstance.get('/user/logout');
+  
   return response.data; // 메시지나 사용자 정보만 사용
 };
 
