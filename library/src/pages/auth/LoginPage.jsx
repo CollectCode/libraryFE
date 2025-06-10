@@ -45,7 +45,7 @@ export default function LoginPage({ checkAuth }) {
 
   return (
     <div className="w-full flex flex-col items-center justify-center bg-white py-10">
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 shadow-md">
         <Book className="w-12 h-12 text-blue-600 mx-auto mb-4" />
         <h1 className="text-2xl font-bold text-gray-900">미니 도서관</h1>
         <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md w-80">

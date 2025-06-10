@@ -7,10 +7,12 @@ import { fetchMe } from '../../api/Auths'; // 인증 정보 요청 API
 export default function UserHome() {
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
-  const [sortBy, setSortBy] = useState('');
+  const [searchBy, setSearchBy] = useState('');
   const [books, setBooks] = useState([]);
   const [userId, setUserId] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
+  const [sortField, setSortField] = useState(''); // 정렬 필드
+  const [sortDirection, setSortDirection] = useState('asc'); // 정렬 방향
   const [pageInfo, setPageInfo] = useState({
     totalPages: 0,
     totalElements: 0,
@@ -31,7 +33,13 @@ export default function UserHome() {
     // 데이터 구조 변환: [{book: {...}}] -> [{...}]
     console.log("Books Data : ", data);
     console.log(data.page);
-    const transformedData = data.content.map(item => item.book);
+    let transformedData = data.content.map(item => item);
+    
+    // 정렬 적용
+    if (sortField) {
+      transformedData = sortBooks(transformedData, sortField, sortDirection);
+    }
+    
     setBooks(transformedData);
     setCurrentPage(data.page.number);
     const setPage = {
@@ -43,6 +51,72 @@ export default function UserHome() {
     };
     setPageInfo(setPage);
     setLoading(false);
+  };
+
+  // 정렬 함수
+  const sortBooks = (booksArray, field, direction) => {
+    return [...booksArray].sort((a, b) => {
+      let aValue = a[field];
+      let bValue = b[field];
+      
+      // 문자열 값들은 trim 처리
+      if (typeof aValue === 'string') aValue = aValue?.trim() || '';
+      if (typeof bValue === 'string') bValue = bValue?.trim() || '';
+      
+      // 날짜 필드의 경우 Date 객체로 변환
+      if (field === 'publishDate') {
+        aValue = new Date(aValue);
+        bValue = new Date(bValue);
+      }
+      
+      // 숫자 필드의 경우 숫자로 변환
+      if (field === 'id') {
+        aValue = Number(aValue);
+        bValue = Number(bValue);
+      }
+      
+      // available 필드의 경우 boolean 값으로 처리
+      if (field === 'available') {
+        aValue = a.available ?? true;
+        bValue = b.available ?? true;
+      }
+      
+      let comparison = 0;
+      if (aValue > bValue) {
+        comparison = 1;
+      } else if (aValue < bValue) {
+        comparison = -1;
+      }
+      
+      return direction === 'desc' ? comparison * -1 : comparison;
+    });
+  };
+
+  // 정렬 핸들러
+  const handleSort = (field) => {
+    let newDirection = 'asc';
+    
+    // 같은 필드를 클릭했을 때 방향 토글
+    if (sortField === field && sortDirection === 'asc') {
+      newDirection = 'desc';
+    }
+    
+    setSortField(field);
+    setSortDirection(newDirection);
+    
+    // 현재 책 목록을 정렬
+    const sortedBooks = sortBooks(books, field, newDirection);
+    setBooks(sortedBooks);
+  };
+
+  // 정렬 아이콘 렌더링
+  const renderSortIcon = (field) => {
+    if (sortField !== field) {
+      return <span className="text-gray-400 ml-1">↕</span>;
+    }
+    return sortDirection === 'asc' ? 
+      <span className="text-blue-600 ml-1">↑</span> : 
+      <span className="text-blue-600 ml-1">↓</span>;
   };
 
   const handleBorrow = async (bookId) => {
@@ -76,12 +150,11 @@ export default function UserHome() {
     return pages;
   };
 
-  const sortOptions = [
-    { value: '', label: '정렬 선택' },
+  const searchOptions = [
+    { value: '', label: '검색 선택' },
     { value: 'title', label: '제목' },
     { value: 'author', label: '저자' },
     { value: 'publisher', label: '출판사' },
-    { value: 'year', label: '출간년도' }
   ];
 
   return (
@@ -102,10 +175,10 @@ export default function UserHome() {
             />
             <select
               className="w-full border px-3 py-2 rounded min-w-[150px]"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              value={searchBy}
+              onChange={(e) => setSearchBy(e.target.value)}
             >
-              {sortOptions.map((option) => (
+              {searchOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -118,17 +191,65 @@ export default function UserHome() {
               검색
             </button>
           </div>
-          {/* 페이지네이션 정보 있던곳 */}
+
           <div className="overflow-x-auto mb-14">
             <table className="w-full text-sm table-auto border">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className='p-2 border'>No</th>
-                  <th className="p-2 border">제목</th>
-                  <th className="p-2 border">저자</th>
-                  <th className="p-2 border">출판사</th>
-                  <th className="p-2 border">출간일</th>
-                  <th className="p-2 border">상태</th>
+                  <th className='p-2 border'>
+                    <button 
+                      onClick={() => handleSort('id')}
+                      className="flex items-center justify-center w-full hover:bg-gray-200 p-1 rounded"
+                    >
+                      No
+                      {renderSortIcon('id')}
+                    </button>
+                  </th>
+                  <th className="p-2 border">
+                    <button 
+                      onClick={() => handleSort('title')}
+                      className="flex items-center justify-center w-full hover:bg-gray-200 p-1 rounded"
+                    >
+                      제목
+                      {renderSortIcon('title')}
+                    </button>
+                  </th>
+                  <th className="p-2 border">
+                    <button 
+                      onClick={() => handleSort('author')}
+                      className="flex items-center justify-center w-full hover:bg-gray-200 p-1 rounded"
+                    >
+                      저자
+                      {renderSortIcon('author')}
+                    </button>
+                  </th>
+                  <th className="p-2 border">
+                    <button 
+                      onClick={() => handleSort('publish')}
+                      className="flex items-center justify-center w-full hover:bg-gray-200 p-1 rounded"
+                    >
+                      출판사
+                      {renderSortIcon('publish')}
+                    </button>
+                  </th>
+                  <th className="p-2 border">
+                    <button 
+                      onClick={() => handleSort('publishDate')}
+                      className="flex items-center justify-center w-full hover:bg-gray-200 p-1 rounded"
+                    >
+                      출간일
+                      {renderSortIcon('publishDate')}
+                    </button>
+                  </th>
+                  <th className="p-2 border">
+                    <button 
+                      onClick={() => handleSort('available')}
+                      className="flex items-center justify-center w-full hover:bg-gray-200 p-1 rounded"
+                    >
+                      상태
+                      {renderSortIcon('available')}
+                    </button>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -146,9 +267,7 @@ export default function UserHome() {
                     <td className="p-2 border">{book.author?.trim()}</td>
                     <td className="p-2 border">{book.publish?.trim()}</td>
                     <td className="p-2 border">{book.publishDate}</td>
-                    <td className="p-2 border">
-                      {(book.available ?? true) ? '대출 가능' : '대출 중'}
-                    </td>
+                      {(book.available ?? true) ? <td className="p-2 border text-green-600">대출 가능</td> : <td className="p-2 border text-red-600">대출 중</td>}
                   </tr>
                 ))}
               </tbody>

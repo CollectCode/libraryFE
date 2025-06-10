@@ -9,18 +9,19 @@ export const getAllUsers = async (pages) => {
 
 // 사용자 등록
 export const createUser = async (userData) => {
-  const response = await axiosInstance.post('/admin/user', userData);
+  const response = await axiosInstance.post('/user/add', userData);
   return response.data;
 };
 
 // 사용자 수정
-export const updateUser = async (id, userData) => {
-  const response = await axiosInstance.put(`/admin/user/${id}`, userData);
+export const updateUser = async (user) => {
+  console.log("User Update Request Data : ", user);
+  const response = await axiosInstance.put(`/user/update`, user);
   return response.data;
 };
 
 // 사용자 삭제 (선택사항)
 export const deleteUser = async (id) => {
-  const response = await axiosInstance.delete(`/admin/user/${id}`);
+  const response = await axiosInstance.delete(`/user/remove/${id}`);
   return response.data;
 };

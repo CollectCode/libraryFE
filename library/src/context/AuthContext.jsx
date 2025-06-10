@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.get('http://localhost:7070/api/user/auth/me', {
         withCredentials: true, // 쿠키 포함
       });
-      const user = res.data.user;
+      const user = res.data;
       console.log("Auth Context in user : ", user);
       setAuth({
         name: user.username,
