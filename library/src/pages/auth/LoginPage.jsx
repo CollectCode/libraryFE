@@ -63,14 +63,6 @@ export default function LoginPage({ checkAuth }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <select
-            className="w-full px-3 py-2 border rounded mb-4"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="USER">사용자</option>
-            <option value="ADMIN">관리자</option>
-          </select>
           {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
           <button className="w-full bg-blue-500 text-white py-2 rounded">로그인</button>
         </form>

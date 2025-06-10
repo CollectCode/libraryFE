@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         name: null,
         role: null,
         isAuthenticated: false,
-        isLoading: false,
+        isLoading: true,
       });
     }
   }
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, checkAuth }}>
+    <AuthContext.Provider value={{ auth, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

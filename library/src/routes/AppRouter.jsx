@@ -18,8 +18,7 @@ export default function AppRouter() {
     console.log("Called AppRouter useEffect");
     console.log("auth : ", auth);
     console.log("check : ", auth.isAuthenticated && auth.role === 'USER');
-    checkAuth();
-  }, []);
+  }, [auth]);
 
   if (auth.isLoading) return <div className="text-center mt-20">인증 확인 중...</div>;
 
@@ -33,7 +32,7 @@ export default function AppRouter() {
         <Route
           path="/user"
           element={
-            auth.isAuthenticated && auth.role === 'USER' ? (
+            !auth.isLoading && auth.isAuthenticated && auth.role === 'USER' ? (
               <Layout><UserHome /></Layout>
             ) : (
               <Navigate to="/login" replace />
