@@ -15,11 +15,6 @@ export default function UserManagePage() {
     last: true
   });
 
-  useEffect(() => {
-    loadUsers();
-    console.log("Called useEffect");
-  }, [currentPage]);
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -40,10 +35,13 @@ export default function UserManagePage() {
     loadUsers();
   }, []);
 
+  useEffect(() => {
+    loadUsers();
+  }, [currentPage]);
+
   // 유저 정보 불러오기
   const loadUsers = async () => {
     const data = await getAllUsers(currentPage);
-    console.log("Loading Users :", data);
     const transformedData = data.content.map(item => item);
     setUsers(transformedData);
     setCurrentPage(data.page.number);
@@ -64,7 +62,7 @@ export default function UserManagePage() {
     console.log(user);
     let updatedUser;
     if (editingId) {
-      updatedUser = await updateUser(user);
+      updatedUser = await updateUser(editingId, user);
     } else {
       updatedUser = await createUser(user);
     }

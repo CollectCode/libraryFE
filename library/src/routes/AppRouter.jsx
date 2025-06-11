@@ -13,12 +13,6 @@ import { useAuth } from '../context/AuthContext';
 export default function AppRouter() {
   const { auth, checkAuth } = useAuth();
 
-  // 최초 인증 상태만 확인
-  useEffect(() => {
-    console.log("Called AppRouter useEffect");
-    console.log("auth : ", auth);
-    console.log("check : ", auth.isAuthenticated && auth.role === 'USER');
-  }, [auth]);
 
   if (auth.isLoading) return <div className="text-center mt-20">인증 확인 중...</div>;
 

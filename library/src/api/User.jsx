@@ -14,9 +14,9 @@ export const createUser = async (userData) => {
 };
 
 // 사용자 수정
-export const updateUser = async (user) => {
+export const updateUser = async (id, user) => {
   console.log("User Update Request Data : ", user);
-  const response = await axiosInstance.put(`/user/update`, user);
+  const response = await axiosInstance.put(`/user/update/${id}`, user);
   return response.data;
 };
 

@@ -10,7 +10,6 @@ export const login = async (data) => {
 export const logout = async () => {
   // JWT는 쿠키에 저장되므로 별도 token 저장 없음
   const response = await axiosInstance.get('/user/logout');
-  
   return response.data; // 메시지나 사용자 정보만 사용
 };
 
@@ -20,7 +19,6 @@ export const fetchMe = async () => {
     const response = await axiosInstance.get('/user/auth/me', {
       withCredentials: true
     });
-    console.log("인증된 유저 : ", response.data);
     return response.data;
   } catch(err) {
     console.error("인증 실패 : ", err);

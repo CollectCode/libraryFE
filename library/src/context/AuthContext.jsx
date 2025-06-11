@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
   // 백엔드 인증 상태 확인 함수
   const checkAuth = async () => {
     await resetAuth();
-    console.log("Called checkAuth in AuthContext");
     try {
       const res = await axios.get('http://localhost:7070/api/user/auth/me', {
         withCredentials: true, // 쿠키 포함

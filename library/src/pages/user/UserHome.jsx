@@ -166,13 +166,6 @@ export default function UserHome() {
           <h1 className="w-full text-2xl font-bold mb-4">도서 검색</h1>
 
           <div className="flex flex-wrap gap-4 mb-4">
-            <input
-              type="text"
-              className="w-full border px-3 py-2 rounded"
-              placeholder="제목, 저자, 출판사 입력"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-            />
             <select
               className="w-full border px-3 py-2 rounded min-w-[150px]"
               value={searchBy}
@@ -184,6 +177,13 @@ export default function UserHome() {
                 </option>
               ))}
             </select>
+            <input
+              type="text"
+              className="w-full border px-3 py-2 rounded"
+              placeholder="제목, 저자, 출판사 입력"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
             <button
               onClick={fetchBooks}
               className="w-full bg-blue-500 text-white px-4 py-2 rounded"

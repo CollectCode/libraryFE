@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getBookById, borrowBook, returnBook } from '../../api/Books'
 
+const BASE_IMAGE_URL = 'http://localhost:7070';
+
 export default function BookDetail() {
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState(null);
@@ -95,7 +97,7 @@ export default function BookDetail() {
             <div className="flex justify-center">
               {book.bookImg ? (
                 <img
-                  src={`/images/${book.bookImg}`}
+                  src={`${BASE_IMAGE_URL}${book.bookImg}`}
                   alt={book.title}
                   className="max-w-xs w-full h-auto border rounded-lg shadow-sm"
                   onError={(e) => {
