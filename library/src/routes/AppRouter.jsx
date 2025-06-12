@@ -7,7 +7,9 @@ import AdminHome from '../pages/admin/UserManagePage';
 import BookDetail from '../pages/book/BookDetail';
 import BookManagePage from '../pages/admin/BookManagePage';
 import BorrowHistoryPage from '../pages/admin/BorrowHistoryPage';
+import UserDetail from '../pages/user/UserDetail';
 import Layout from '../components/Layout';
+import LoanPage from '../pages/admin/LoanPage';
 import { useAuth } from '../context/AuthContext';
 
 export default function AppRouter() {
@@ -60,6 +62,26 @@ export default function AppRouter() {
           element={
             auth.isAuthenticated && auth.role === 'ADMIN' ? (
               <Layout><BorrowHistoryPage /></Layout>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/admin/loans"
+          element={
+            auth.isAuthenticated && auth.role === 'ADMIN' ? (
+              <Layout><LoanPage /></Layout>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/user/:userId"
+          element={
+            auth.isAuthenticated && auth.role === 'ADMIN' ? (
+              <Layout><UserDetail /></Layout>
             ) : (
               <Navigate to="/login" replace />
             )

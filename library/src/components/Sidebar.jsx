@@ -24,6 +24,9 @@ export default function Sidebar() {
             <Link to="/admin/borrows" className="hover:bg-gray-700 p-2 rounded">
               📄 대출 이력
             </Link>
+            <Link to="/admin/loans" className='hover:bg-gray-700 p-2 rounded'>
+              🔁 대출/반납
+            </Link>
           </>
         )}
       </nav>

@@ -1,5 +1,6 @@
 // src/pages/admin/UserManagePage.jsx
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAllUsers, createUser, updateUser, deleteUser } from '../../api/User';
 
 export default function UserManagePage() {
@@ -14,6 +15,8 @@ export default function UserManagePage() {
     first: true,
     last: true
   });
+  
+  const navigate = useNavigate();
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -87,7 +90,12 @@ export default function UserManagePage() {
   const handleReset = async () => {
     setUserInfo({ id:'', password: '', username: '', phone: '', info: '', dept: '', role:'' });
     setEditingId(null);
-  }
+  };
+
+  // 유저 상세 페이지로 이동
+  const handleUserDetail = (userId) => {
+    navigate(`/user/${userId}`);
+  };
 
   return (
     <div className="p-6">
@@ -178,7 +186,12 @@ export default function UserManagePage() {
           {users.map((user) => (
             <tr key={user.id} className="text-center">
               <td className="border p-2">{user.id}</td>
-              <td className="border p-2">{user.username}</td>
+              <td className="border p-2"><button
+                  onClick={() => handleUserDetail(user.id)}
+                  className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                >
+                  {user.username}
+                </button></td>
               <td className="border p-2">{user.phone}</td>
               <td className="border p-2">{user.dept}</td>
               <td className="border p-2">{user.info}</td>

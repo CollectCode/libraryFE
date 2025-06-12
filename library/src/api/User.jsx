@@ -25,3 +25,10 @@ export const deleteUser = async (id) => {
   const response = await axiosInstance.delete(`/user/remove/${id}`);
   return response.data;
 };
+
+// 사용자 ID로 검색
+export const fetchUserById = async (userId) => {
+  const response = await axiosInstance.get(`/user/get/${userId}`);
+  console.log("get User By Id : ", response.data);
+  return response.data
+};

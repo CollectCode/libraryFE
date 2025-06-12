@@ -1,7 +1,7 @@
 // src/pages/user/UserHome.jsx
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { searchBooks, borrowBook, returnBook, getAllBooks } from '../../api/Books';
+import { searchBook, borrowBook, returnBook, getAllBooks } from '../../api/Books';
 import { fetchMe } from '../../api/Auths'; // 인증 정보 요청 API
 
 export default function UserHome() {
@@ -21,6 +21,10 @@ export default function UserHome() {
     last: true
   });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(searchBy);
+  }, [searchBy]);
 
   useEffect(() => {
     fetchBooks();
@@ -119,16 +123,6 @@ export default function UserHome() {
       <span className="text-blue-600 ml-1">↓</span>;
   };
 
-  const handleBorrow = async (bookId) => {
-    await borrowBook(bookId, userId);
-    fetchBooks();
-  };
-
-  const handleReturn = async (bookId) => {
-    await returnBook(bookId, userId);
-    fetchBooks();
-  };
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -156,6 +150,33 @@ export default function UserHome() {
     { value: 'author', label: '저자' },
     { value: 'publisher', label: '출판사' },
   ];
+
+  const searchBooks = async () => {
+    setLoading(true);
+    console.log(searchBy);
+    const data = await searchBook(searchBy, keyword);
+    // 데이터 구조 변환: [{book: {...}}] -> [{...}]
+    console.log("Search Book Data : ", data);
+    console.log(data.page);
+    let transformedData = data.content.map(item => item);
+    
+    // 정렬 적용
+    if (sortField) {
+      transformedData = sortBooks(transformedData, sortField, sortDirection);
+    }
+    
+    setBooks(transformedData);
+    setCurrentPage(data.page.number);
+    const setPage = {
+      totalPages: data.page.totalPages,
+      totalElements: data.page.totalElements,
+      size: 10,
+      first: true,
+      last: true
+    };
+    setPageInfo(setPage);
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -185,7 +206,7 @@ export default function UserHome() {
               onChange={(e) => setKeyword(e.target.value)}
             />
             <button
-              onClick={fetchBooks}
+              onClick={searchBooks}
               className="w-full bg-blue-500 text-white px-4 py-2 rounded"
             >
               검색
@@ -267,7 +288,7 @@ export default function UserHome() {
                     <td className="p-2 border">{book.author?.trim()}</td>
                     <td className="p-2 border">{book.publish?.trim()}</td>
                     <td className="p-2 border">{book.publishDate}</td>
-                      {(book.available ?? true) ? <td className="p-2 border text-green-600">대출 가능</td> : <td className="p-2 border text-red-600">대출 중</td>}
+                      {(book.status === 'LOAN_ABLE') ? <td className="p-2 border text-green-600">대출 가능</td> : <td className="p-2 border text-red-600">대출 불가</td>}
                   </tr>
                 ))}
               </tbody>

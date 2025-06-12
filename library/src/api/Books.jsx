@@ -9,7 +9,17 @@ export const getAllBooks = async (queryParams) =>  {
 
 // BookId로 책 Detail조회
 export const getBookById = async (bookId) => {
+  console.log("getBookId : ", bookId);
   const response = await axiosInstance.get(`/book/${bookId}`);
+  return response.data;
+}
+
+export const searchBook = async (type, param) =>  {
+  if(type === '' || param === null) {
+   return searchBooks(0);
+  }
+  const response = await axiosInstance.get(`/book/${type}/${param}`);
+  console.log("searchData : ", response.data);
   return response.data;
 }
 
